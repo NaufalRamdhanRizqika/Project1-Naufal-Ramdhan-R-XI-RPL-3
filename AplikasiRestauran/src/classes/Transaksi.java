@@ -20,27 +20,24 @@ public class Transaksi {
     private double uangBayar;
     private double pajak;
     private double totalBayar;
-    public double biayaService=0;
+    private double biayaService = 0;
     
     public Transaksi(String no_transaksi, String nm_pemesan, String tanggal, String no_meja){
+        this.noTransaksi = no_transaksi;
+        this.namaPemesan = nm_pemesan;
+        this.tanggal = tanggal;
+        this.noMeja = no_meja;
         
-        
-         this.noTransaksi = no_transaksi;
-         this.namaPemesan = nm_pemesan;
-         this.tanggal = tanggal;
-         this.noMeja = no_meja;
-         
-         pesanan = new ArrayList<>();
+        pesanan = new ArrayList<>();
     }
     
     public void tambahPesanan(Pesanan pesanan){
         this.pesanan.add(pesanan);
     }
     
-    //hilangkan dari strukter kelas
-    //public Pesanan getPesanan () [
-    //return pesanan
-    // ]
+    //public Pesanan getPesanan(){
+    //    return null;
+    //}   
     
     public ArrayList<Pesanan> getSemuaPesanan(){
         return pesanan;
@@ -53,6 +50,7 @@ public class Transaksi {
     public double hitungKembalian(){
         return 0;
     }
+    
     public void setBiayaService(double service){
         this.biayaService = service;
     }
@@ -60,7 +58,8 @@ public class Transaksi {
     public void setPajak(double pajak){
         this.pajak = pajak;
     }
-     public double hitungTotalPesanan(){
+    
+    public double hitungTotalPesanan(){
         for(int i = 0; i < pesanan.size(); i++){
             Pesanan pesan = pesanan.get(i);
             double harga = pesan.getMenu().getHarga();
@@ -87,7 +86,7 @@ public class Transaksi {
         return uang_bayar - totalBayar;
     }
     
-    public void cekStruk(){
+    public void cetakStruk(){
         System.out.println("\n======== RAMEN INDIA ========");
         System.out.println("No. Transaksi: " + noTransaksi);
         System.out.println("Pemesan: " + namaPemesan);
