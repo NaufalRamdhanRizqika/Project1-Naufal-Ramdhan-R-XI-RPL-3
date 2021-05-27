@@ -29,8 +29,8 @@ public class MainAplikasiKasir {
         MainAplikasiKasir app = new MainAplikasiKasir();
         app.generateDaftarMenu();
         
-        System.out.println("==========TRANSAKSI==========");
-                
+        System.out.println("========= TRANSAKSI =========");
+        do{
         System.out.print("No Transaksi : ");
         no_transaksi = input.next();
         System.out.print("Pemesan : ");
@@ -46,17 +46,16 @@ public class MainAplikasiKasir {
     }
         
         Transaksi trans = new Transaksi(no_transaksi, nama_pemesan, tanggal, no_meja);
-        System.out.println("========PESANAN========");
-        int no_kuah;
-        do {
-            Menu menu_yang_dipilih = app.daftarMenu.pilihMenu();
- 
+            System.out.println("========= PESANAN ========");
+            int no_kuah;
+            do {
+                Menu menu_yang_dipilih = app.daftarMenu.pilihMenu();
+                jumlah_pesanan = (int)app.cekInputNumber("Jumlah: ");
 
+                Pesanan pesanan = new Pesanan(menu_yang_dipilih, jumlah_pesanan);
+                trans.tambahPesanan(pesanan);
 
-            Pesanan pesanan = new Pesanan(menu_yang_dipilih, jumlah_pesanan);
-            trans.tambahPesanan(pesanan);
-
-            if(menu_yang_dipilih.getKategori().equals("Ramen")){
+                if(menu_yang_dipilih.getKategori().equals("Ramen")){
                     int jumlah_ramen = jumlah_pesanan;
                     do{
                         Menu kuah_yang_dipilih = app.daftarMenu.pilihKuah();
@@ -92,13 +91,49 @@ public class MainAplikasiKasir {
                     pesanan.setKeterangan(keterangan);
                 }
 
+                System.out.print("Tambah Pesanan Lagi? [Y/N]");
+                pesan_lagi = input.nextLine();
+            } while (pesan_lagi.equalsIgnoreCase("Y"));  
             
-            System.out.print("Tambah Pesanan Lagi? [Y/N] : ");
-            pesan_lagi = input.next();
-        }while (pesan_lagi.equalsIgnoreCase("Y")); 
-}
-    trans.cetakStruk();
+           trans.cetakStruk();
     
+            double total_pesanan = trans.hitungTotalPesanan();
+            System.out.println("==================");
+            System.out.println("Total: \t\t" + total_pesanan);
+
+            trans.setPajak(PAJAK_PPN);
+            double ppn = trans.hitungPajak();
+            System.out.println("Pajak 10%: \t\t" + ppn);
+
+            double biaya_service = 0;
+            if(makan_ditempat.equalsIgnoreCase("Y")){
+                trans.setBiayaService(BIAYA_SERVICE);
+                biaya_service = trans.hitungBiayaService();
+                System.out.println("Biaya Service 5%: \t" + biaya_service);
+            
+    }
+
+            System.out.println("Total: \t\t\t" + trans.hitungTotalBayar(ppn, biaya_service));
+
+            double kembalian = 0;
+            do{
+                double uang_bayar = app.cekInputNumber("Uang Bayar: \t\t");
+
+                kembalian = trans.hitungKembalian(uang_bayar);
+                if(kembalian < 0){
+                    System.out.println("[Err] Uang anda kurang"); 
+                } else {
+                    System.out.println("Kembalian: \t\t" + kembalian);
+                    break;
+                }
+            } while(kembalian < 0);
+            System.out.println("Lakukan Trabsaksi Lagi? [Y/N]");
+        }while (transaksi_lagi.equalsIgnoreCase("Y"));    
+            
+        System.out.println("========= TERIMA KASIH =========");
+    
+    
+    }
      public double cekInputNumber(String label){
         try {
             Scanner get_input = new Scanner (System.in);
@@ -132,5 +167,5 @@ public class MainAplikasiKasir {
         daftarMenu.tambahMenu(new Minuman("Vietnam Drip", 14000));
         
         daftarMenu.tampilDaftarMenu();
-    }
+        }
 }
